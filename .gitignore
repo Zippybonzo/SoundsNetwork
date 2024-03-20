@@ -10,3 +10,4 @@ Bot.iml
 .idea/modules.xml
 .idea/vcs.xml
 Bot.iml
+prisma/dev.db
