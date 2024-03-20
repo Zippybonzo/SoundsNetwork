@@ -10,17 +10,29 @@ datasource db {
   url      = "file:./dev.db"
 }
 
+// staff models
 model staff {
-  id       Int      @unique
-  username String
-  role     String
-  strikes  strike[]
+  id        Int         @unique
+  username  String
+  role      String
+  strikes   strike[]
+  promotion promotion[]
 }
 
 model strike {
-  id      Int    @unique
+  id      Int    @id @default(autoincrement())
   user    staff  @relation(fields: [staffId], references: [id])
   reason  String
   striker Int
+  staffId Int
+}
+
+model promotion {
+  id      Int    @id @default(autoincrement())
+  user    staff  @relation(fields: [staffId], references: [id])
+  reason  String
+  striker Int
+  prior   Int
+  post    Int
   staffId Int
 }
