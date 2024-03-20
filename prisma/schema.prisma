@@ -12,7 +12,8 @@ datasource db {
 
 // staff models
 model staff {
-  id        Int         @unique
+  id        Int         @id @default(autoincrement())
+  userid    String
   username  String
   role      String
   strikes   strike[]
