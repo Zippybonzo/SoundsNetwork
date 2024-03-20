@@ -17,6 +17,7 @@ model staff {
   role      String
   strikes   strike[]
   promotion promotion[]
+  demotion  demotion[]
 }
 
 model strike {
@@ -28,6 +29,16 @@ model strike {
 }
 
 model promotion {
+  id      Int    @id @default(autoincrement())
+  user    staff  @relation(fields: [staffId], references: [id])
+  reason  String
+  striker Int
+  prior   Int
+  post    Int
+  staffId Int
+}
+
+model demotion {
   id      Int    @id @default(autoincrement())
   user    staff  @relation(fields: [staffId], references: [id])
   reason  String
