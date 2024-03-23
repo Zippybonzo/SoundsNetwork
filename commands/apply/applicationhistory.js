@@ -27,23 +27,27 @@ module.exports = {
     const embeds = [];
     for (let i = 0; i < history.length; i++) {
         const {Id, userId, applyabout, applyskills, applyexperience, applystandout, applyelse, status} = history[i];
-        function truncateString(str, num) {
-            if (str.length <= num) {
-                return str;
-            }
-            return str.slice(0, num) + '...';
-        }
+
+// Check if the values are null and replace with 'Not provided'
+        const statusField = status ? status : 'Not provided';
+        const about = applyabout ? applyabout : 'Not provided';
+        const skills = applyskills ? applyskills : 'Not provided';
+        const experience = applyexperience ? applyexperience : 'Not provided';
+        const standout = applystandout ? applystandout : 'Not provided';
+        const elseField = applyelse ? applyelse : 'Not provided';
+
         const Embed = new EmbedBuilder()
             .setTitle('Application History')
             .addFields(
-                { name: 'User:', value: `<@${userId}>` },
+          { name: 'User:', value: `<@${userId}>` },
                 { name: 'Status:', value: status },
-                { name: 'About:', value: truncateString(applyabout, 1024) },
-                { name: 'Skills:', value: truncateString(applyskills, 1024) },
-                { name: 'Experience:', value: truncateString(applyexperience, 1024) },
-                { name: 'Standout:', value: truncateString(applystandout, 1024) },
-                { name: 'Anything Else:', value: truncateString(applyelse, 1024) },
+                { name: 'About:', value: about },
+                { name: 'Skills:', value: skills },
+                { name: 'Experience:', value: experience },
+                { name: 'Standout:', value: standout },
+                { name: 'Anything Else:', value: elseField},
             );
+embeds.push(Embed);
         embeds.push(Embed);
     }
     await interaction.reply({embeds: embeds});
