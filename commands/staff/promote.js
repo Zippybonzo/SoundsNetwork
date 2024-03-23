@@ -29,7 +29,7 @@ module.exports = {
     let senioradmin = interaction.guild.roles.cache.get("1205688029742895104");
     const dbtarget = await prisma.staff.findUnique({
         where: {
-            userId: target.id,
+            userid: target.id,
         }
     });
 
