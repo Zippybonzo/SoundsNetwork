@@ -47,7 +47,6 @@ module.exports = {
                 { name: 'Standout:', value: standout },
                 { name: 'Anything Else:', value: elseField},
             );
-embeds.push(Embed);
         embeds.push(Embed);
     }
     await interaction.reply({embeds: embeds});
