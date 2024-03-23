@@ -101,7 +101,6 @@ async function addstaff(userid, applyabout, applyskills, applyexperience, applys
 client.on(Events.InteractionCreate, interaction => {
     if (!interaction.isModalSubmit()) return;
     if (interaction.customId === 'apply') {
-        interaction.reply({ content: 'We will contact you shortly regarding your application!', ephemeral: true });
         const applyabout = interaction.fields.getTextInputValue('aboutInput');
         const applyskills = interaction.fields.getTextInputValue('skillsInput');
         const applyexperience = interaction.fields.getTextInputValue('experienceInput');
@@ -137,6 +136,7 @@ client.on(Events.InteractionCreate, interaction => {
 
         const row = new ActionRowBuilder()
             .addComponents(accept, deny);
+        interaction.reply({ content: 'Thanks for your application!\nWe will contact you shortly regarding your application!', ephemeral: true });
       async function sendembed(applychannel, embed) {
           applyembed = await applychannel.send({
               content: `<@${interaction.user.id}> has applied for staff!`,

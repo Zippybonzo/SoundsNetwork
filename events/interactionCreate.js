@@ -47,7 +47,6 @@ module.exports = {
                 }
                 await applicant.send({ content: `Your application has been accepted!\nWelcome to the Sounds Hub staff team!` });
                 await interaction.update({ content: `<@${interaction.user.id}> accepted the application for <@${applicant.id}>`, components: [] })
-                await interaction.followUp({ content: `Accepted the application for <@${applicant.id}>`, ephemeral: true });
             } else if (interaction.customId === 'applicationdeny') {
                 const message = await interaction.message.fetch();
                 const applicant = message.mentions.users.first();
@@ -71,7 +70,6 @@ module.exports = {
                 }
                 await applicant.send({ content: `Your application has been denied!\nYou are free to reapply for staff at any time.` });
                 await interaction.update({ content: `<@${interaction.user.id}> denied the application for <@${applicant.id}>`, components: [] });
-                await interaction.followUp({ content: `Denied the application for <@${applicant.id}>`, ephemeral: true });
             }
         }
     }
