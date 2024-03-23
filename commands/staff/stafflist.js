@@ -22,7 +22,7 @@ module.exports = {
             });
 
             const staffNames = staffMembers.map(staff => staff.username).join(', ');
-            embed.addField(role, staffNames || 'No staff in this role');
+            embed.addFields(role, staffNames || 'No staff in this role');
         }
 
         await interaction.reply({ embeds: [embed] });
