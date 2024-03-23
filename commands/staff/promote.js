@@ -20,10 +20,15 @@ module.exports = {
                     { name: 'Senior Moderator', value: 'Senior Moderator' },
                     { name: 'Administrator', value: 'Administrator' },
                     { name: 'Senior Administrator', value: 'Senior Administrator' },
-                )),
+                ))
+        .addStringOption(option =>
+            option.setName('reason')
+                .setDescription('The reason for the promotion.')
+                .setRequired(true)),
     async execute(interaction) {
     const target = interaction.options.getUser('target');
     const newrole = interaction.options.getString('newrole');
+    const reason = interaction.options.getString('reason');
     let seniormod = interaction.guild.roles.cache.get("1205687611872641105");
     let admin = interaction.guild.roles.cache.get("1171708072809484348");
     let senioradmin = interaction.guild.roles.cache.get("1205688029742895104");
@@ -48,6 +53,7 @@ module.exports = {
             staff: target.id,
             striker: interaction.user.id,
             post: newrole,
+            reason: reason,
         },
     });
 
