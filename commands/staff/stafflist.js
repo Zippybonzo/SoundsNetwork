@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageEmbed } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder} = require('discord.js');
 const { getPrismaClient } = require("../../prisma.js");
 const prisma = getPrismaClient();
 
@@ -8,7 +8,7 @@ module.exports = {
         .setDescription('List the server staff.'),
     async execute(interaction) {
         const roles = ['Moderator', 'Senior Moderator', 'Administrator', 'Senior Administrator'];
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setColor(0x0099FF)
             .setTitle('Staff List');
 
