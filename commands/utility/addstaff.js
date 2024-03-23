@@ -21,13 +21,14 @@ module.exports = {
             let targetid = target.id;
             let targetusername = target.username;
             const role = interaction.options.getString('role');
-            await prisma.staff.create({
+            const create = await prisma.staff.create({
                 data: {
                     userid: targetid,
                     role: role,
                     username: targetusername,
                 },
             });
+            console.log(create);
             await interaction.reply({content: 'Success!', ephemeral: true});
         } else {
             await interaction.reply({content: 'You are not a bot developer.', ephemeral: true});

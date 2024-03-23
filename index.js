@@ -1,8 +1,9 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, Events, GatewayIntentBits, ActionRowBuilder} = require('discord.js');
+const { Client, Collection, Events, GatewayIntentBits, ActionRowBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { token } = require('./config.json');
-
+const { getPrismaClient } = require("./prisma");
+const prisma = getPrismaClient();
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 client.commands = new Collection();
@@ -18,7 +19,7 @@ for (const folder of commandFolders) {
         if ('data' in command && 'execute' in command) {
             client.commands.set(command.data.name, command);
         } else {
-            console.log(`[OOPSIE] The command at ${filePath} is missing a required "data" or "execute" property.`);
+            console.log(`[SHIT] The command at ${filePath} is missing a required "data" or "execute" property.`);
         }
     }
 }
@@ -55,7 +56,7 @@ function deploy(){
             if ('data' in command && 'execute' in command) {
                 commands.push(command.data.toJSON());
             } else {
-                console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+                console.log(`[SHIT] The command at ${filePath} is missing a required "data" or "execute" property.`);
             }
         }
     }
@@ -83,16 +84,60 @@ client.login(token);
 console.log("Successfully started bot.");
 
 // events
-
+async function addstaff(userid, applyabout, applyskills, applyexperience, applystandout, applyelse ) {
+    const applydb = await prisma.application.create({
+        data: {
+            userId: userid,
+            applyabout: applyabout,
+            applyskills: applyskills,
+            applyexperience: applyexperience,
+            applystandout: applystandout,
+            applyelse: applyelse,
+            status: "Pending",
+        },
+    })
+}
 client.on(Events.InteractionCreate, interaction => {
     if (!interaction.isModalSubmit()) return;
     if (interaction.customId === 'apply') {
-        interaction.reply({ content: 'Your submission was received successfully!', ephemeral: true });
+        interaction.reply({ content: 'We will contact you shortly regarding your application!', ephemeral: true });
+        const applyabout = interaction.fields.getTextInputValue('aboutInput');
+        const applyskills = interaction.fields.getTextInputValue('skillsInput');
+        const applyexperience = interaction.fields.getTextInputValue('experienceInput');
+        const applystandout = interaction.fields.getTextInputValue('standoutInput');
+        const applyanythingelse = interaction.fields.getTextInputValue('anythingelseInput');
+        const applychannel = client.channels.cache.get('1206417214505357343')
+        const userid = interaction.user.id
+        function truncateString(str, num) {
+            if (str.length <= num) {
+                return str;
+            }
+            return str.slice(0, num) + '...';
+        }
+        const embed = new EmbedBuilder()
+            .setColor(0x0099FF)
+            .setTitle(`${interaction.user.username}#${interaction.user.discriminator}'s application`)
+            .addFields(
+                { name: 'About:', value: truncateString(applyabout, 1024) },
+                { name: 'Skills:', value: truncateString(applyskills, 1024) },
+                { name: 'Experience:', value: truncateString(applyexperience, 1024) },
+                { name: 'Standout:', value: truncateString(applystandout, 1024) },
+                { name: 'Anything Else:', value: truncateString(applyanythingelse, 1024) },
+            );
+        const accept = new ButtonBuilder()
+            .setCustomId('applicationaccept')
+            .setLabel('Accept')
+            .setStyle(ButtonStyle.Success);
+
+        const deny = new ButtonBuilder()
+            .setCustomId('applicationdeny')
+            .setLabel('Deny')
+            .setStyle(ButtonStyle.Danger);
+
+        const row = new ActionRowBuilder()
+            .addComponents(accept, deny);
+        addstaff(userid, applyabout, applyskills, applyexperience, applystandout, applyanythingelse);
+        applyembed = applychannel.send({ content: `<@${interaction.user.id}> has applied for staff!`, embeds: [embed], components: [row] });
     }
-    const applyabout = interaction.fields.getTextInputValue('aboutInput');
-    const applyskills = interaction.fields.getTextInputValue('skillsInput');
-    const applyexperience = interaction.fields.getTextInputValue('experienceInput');
-    const applystandout = interaction.fields.getTextInputValue('standoutInput');
-    const applyanythingelse = interaction.fields.getTextInputValue('anythingelseInput');
-    const applychannel = 
 });
+

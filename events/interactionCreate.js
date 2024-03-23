@@ -3,24 +3,36 @@ const { Events } = require('discord.js');
 module.exports = {
     name: Events.InteractionCreate,
     async execute(interaction) {
-        if (!interaction.isChatInputCommand()) return;
+        if (interaction.isChatInputCommand()) {
+            const command = interaction.client.commands.get(interaction.commandName);
 
-        const command = interaction.client.commands.get(interaction.commandName);
+            if (!command) {
+                console.error(`No command matching ${interaction.commandName} was found.`);
+                return;
+            }
 
-        if (!command) {
-            console.error(`No command matching ${interaction.commandName} was found.`);
-            return;
-        }
-
-        try {
-            await command.execute(interaction);
-        } catch (error) {
-            console.error(error);
-            if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
-            } else {
-                await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+            try {
+                await command.execute(interaction);
+            } catch (error) {
+                console.error(`Error executing ${interaction.commandName}`);
+                console.error(error);
+            }
+        } else if (interaction.isButton()) {
+            if (interaction.customId === 'applicationaccept') {
+                const message = await interaction.message.fetch();
+                const applicant = message.mentions.users.first();
+                const staffrole = message.guild.roles.cache.get("1204235136967778314");
+                await message.mentions.members.first().roles.add(staffrole);
+                await applicant.send({ content: `Your application has been accepted!\nWelcome to the Sounds Hub staff team!` });
+                await interaction.update({ content: `<@${interaction.user.id}> accepted the application for <@${applicant.id}>`, components: [] })
+                await interaction.followUp({ content: `Accepted the application for <@${applicant.id}>`, ephemeral: true });
+            } else if (interaction.customId === 'applicationdeny') {
+                const message = await interaction.message.fetch();
+                const applicant = message.mentions.users.first();
+                await applicant.send({ content: `Your application has been denied!\nYou are free to reapply for staff at any time.` });
+                await interaction.update({ content: `<@${interaction.user.id}> denied the application for <@${applicant.id}>`, components: [] });
+                await interaction.followUp({ content: `Accepted the application for <@${applicant.id}>`, ephemeral: true });
             }
         }
-    },
+    }
 };

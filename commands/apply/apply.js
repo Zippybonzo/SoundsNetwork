@@ -11,23 +11,28 @@ module.exports = {
         const aboutInput = new TextInputBuilder()
             .setCustomId('aboutInput')
             .setLabel("Tell us a bit about yourself!")
-            .setStyle(TextInputStyle.Paragraph);
+            .setStyle(TextInputStyle.Paragraph)
+            .setMaxLength(612);
         const skillsInput = new TextInputBuilder()
             .setCustomId('skillsInput')
             .setLabel("What skills do you have?")
-            .setStyle(TextInputStyle.Paragraph);
+            .setStyle(TextInputStyle.Paragraph)
+            .setMaxLength(612);
         const experienceInput = new TextInputBuilder()
             .setCustomId('experienceInput')
             .setLabel("Which servers have you staffed on?")
-            .setStyle(TextInputStyle.Paragraph);
+            .setStyle(TextInputStyle.Paragraph)
+            .setMaxLength(612);
         const standoutInput = new TextInputBuilder()
             .setCustomId('standoutInput')
             .setLabel("What makes you stand out from others?")
-            .setStyle(TextInputStyle.Paragraph);
+            .setStyle(TextInputStyle.Paragraph)
+            .setMaxLength(612);
         const anythingelseInput = new TextInputBuilder()
             .setCustomId('anythingelseInput')
             .setLabel("Anything else?")
-            .setStyle(TextInputStyle.Paragraph);
+            .setStyle(TextInputStyle.Paragraph)
+            .setMaxLength(612);
 
         const firstActionRow = new ActionRowBuilder().addComponents(aboutInput);
         const secondActionRow = new ActionRowBuilder().addComponents(skillsInput);
