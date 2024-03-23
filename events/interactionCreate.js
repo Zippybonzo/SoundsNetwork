@@ -45,6 +45,15 @@ module.exports = {
                         },
                     });
                 }
+                await prisma.staff.create(
+                    {
+                        data: {
+                            userid: applicant.id,
+                            role: "Moderator",
+                            username: applicant.username,
+                        },
+                    }
+                )
                 await applicant.send({ content: `Your application has been accepted!\nWelcome to the Sounds Hub staff team!` });
                 await interaction.update({ content: `<@${interaction.user.id}> accepted the application for <@${applicant.id}>`, components: [] })
             } else if (interaction.customId === 'applicationdeny') {
