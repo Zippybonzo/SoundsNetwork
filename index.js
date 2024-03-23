@@ -107,7 +107,7 @@ client.on(Events.InteractionCreate, interaction => {
         const applyexperience = interaction.fields.getTextInputValue('experienceInput');
         const applystandout = interaction.fields.getTextInputValue('standoutInput');
         const applyanythingelse = interaction.fields.getTextInputValue('anythingelseInput');
-        const applychannel = client.channels.cache.get('1206417214505357343')
+        const applychannel = client.channels.cache.get('1206052005999812648')
         const userid = interaction.user.id
         function truncateString(str, num) {
             if (str.length <= num) {
