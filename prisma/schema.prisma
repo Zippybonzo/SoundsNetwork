@@ -52,6 +52,7 @@ model demotion {
 model application {
   id              Int    @id @default(autoincrement())
   userId          String
+  messageId       String
   applyabout      String
   applyskills     String
   applyexperience String

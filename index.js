@@ -84,8 +84,8 @@ client.login(token);
 console.log("Successfully started bot.");
 
 // events
-async function addstaff(userid, applyabout, applyskills, applyexperience, applystandout, applyelse ) {
-    const applydb = await prisma.application.create({
+async function addstaff(userid, applyabout, applyskills, applyexperience, applystandout, applyelse, messageId ) {
+    await prisma.application.create({
         data: {
             userId: userid,
             applyabout: applyabout,
@@ -94,6 +94,7 @@ async function addstaff(userid, applyabout, applyskills, applyexperience, applys
             applystandout: applystandout,
             applyelse: applyelse,
             status: "Pending",
+            messageId: messageId,
         },
     })
 }
@@ -106,7 +107,7 @@ client.on(Events.InteractionCreate, interaction => {
         const applyexperience = interaction.fields.getTextInputValue('experienceInput');
         const applystandout = interaction.fields.getTextInputValue('standoutInput');
         const applyanythingelse = interaction.fields.getTextInputValue('anythingelseInput');
-        const applychannel = client.channels.cache.get('1206052005999812648')
+        const applychannel = client.channels.cache.get('1206417214505357343')
         const userid = interaction.user.id
         function truncateString(str, num) {
             if (str.length <= num) {
@@ -136,8 +137,15 @@ client.on(Events.InteractionCreate, interaction => {
 
         const row = new ActionRowBuilder()
             .addComponents(accept, deny);
-        addstaff(userid, applyabout, applyskills, applyexperience, applystandout, applyanythingelse);
-        applyembed = applychannel.send({ content: `<@${interaction.user.id}> has applied for staff!`, embeds: [embed], components: [row] });
+      async function sendembed(applychannel, embed) {
+          applyembed = await applychannel.send({
+              content: `<@${interaction.user.id}> has applied for staff!`,
+              embeds: [embed],
+              components: [row]
+          });
+          addstaff(userid, applyabout, applyskills, applyexperience, applystandout, applyanythingelse, applyembed.id);
+      }
+      sendembed(applychannel, embed);
     }
 });
 
