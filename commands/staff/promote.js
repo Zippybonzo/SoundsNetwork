@@ -17,9 +17,9 @@ module.exports = {
                 .setDescription('Their new role!')
                 .setRequired(true)
                 .addChoices(
-                    { name: 'Senior Moderator', value: 'srmod' },
-                    { name: 'Administrator', value: 'admin' },
-                    { name: 'Senior Administrator', value: 'sradmin' },
+                    { name: 'Senior Moderator', value: 'Senior Moderator' },
+                    { name: 'Administrator', value: 'Administrator' },
+                    { name: 'Senior Administrator', value: 'Senior Administrator' },
                 )),
     async execute(interaction) {
     const target = interaction.options.getUser('target');
@@ -36,6 +36,7 @@ module.exports = {
     await prisma.staff.update({
         where: {
             Id: dbtarget.id,
+            userid: target.id,
         },
         data: {
             role: newrole,
