@@ -12,8 +12,7 @@ datasource db {
 
 // staff models
 model staff {
-  id        Int         @id @default(autoincrement())
-  userid    String
+  userid    String      @id
   username  String
   role      String
   strikes   strike[]
@@ -23,28 +22,40 @@ model staff {
 
 model strike {
   id      Int    @id @default(autoincrement())
-  user    staff  @relation(fields: [staffId], references: [id])
+  staffId String
+  staff   staff  @relation(fields: [staffId], references: [userid])
   reason  String
   striker Int
-  staffId Int
 }
 
 model promotion {
   id      Int    @id @default(autoincrement())
-  user    staff  @relation(fields: [staffId], references: [id])
+  staffId String
+  staff   staff  @relation(fields: [staffId], references: [userid])
   reason  String
   striker Int
   prior   Int
   post    Int
-  staffId Int
 }
 
 model demotion {
   id      Int    @id @default(autoincrement())
-  user    staff  @relation(fields: [staffId], references: [id])
+  staffId String
+  staff   staff  @relation(fields: [staffId], references: [userid])
   reason  String
   striker Int
   prior   Int
   post    Int
-  staffId Int
+}
+
+model application {
+  id              Int    @id @default(autoincrement())
+  userId          String
+  applyabout      String
+  applyskills     String
+  applyexperience String
+  applystandout   String
+  applyelse       String
+  status          String
+  reason          String
 }

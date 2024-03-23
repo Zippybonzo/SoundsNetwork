@@ -1,6 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
+const { Client, Collection, Events, GatewayIntentBits, ActionRowBuilder} = require('discord.js');
 const { token } = require('./config.json');
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -23,31 +23,20 @@ for (const folder of commandFolders) {
     }
 }
 
-client.once(Events.ClientReady, readyClient => {
-    console.log(`Ready! Logged in as ${readyClient.user.tag}`);
-});
+const eventsPath = path.join(__dirname, 'events');
+const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 
-client.on(Events.InteractionCreate, async interaction => {
-    if (!interaction.isChatInputCommand()) return;
-    const command = interaction.client.commands.get(interaction.commandName);
-
-    if (!command) {
-        console.error(`No command matching ${interaction.commandName} was found.`);
-        return;
+for (const file of eventFiles) {
+    const filePath = path.join(eventsPath, file);
+    const event = require(filePath);
+    if (event.once) {
+        client.once(event.name, (...args) => event.execute(...args));
+    } else {
+        client.on(event.name, (...args) => event.execute(...args));
     }
-
-    try {
-        await command.execute(interaction);
-    } catch (error) {
-        console.error(error);
-        if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
-        } else {
-            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-        }
-    }
-});
-console.log("Running deployment script.")
+}
+console.log("Successfully loaded commands and events.");
+console.log("Running deployment script.");
 function deploy(){
     const { REST, Routes } = require('discord.js');
     const { clientId, guildId, token } = require('./config.json');
@@ -88,7 +77,22 @@ function deploy(){
 
 }
 deploy();
-console.log("Deployed.")
-console.log("Logging in.")
+console.log("Started command deployment.");
+console.log("Logging in.");
 client.login(token);
-console.log("Successfully started bot.")
+console.log("Successfully started bot.");
+
+// events
+
+client.on(Events.InteractionCreate, interaction => {
+    if (!interaction.isModalSubmit()) return;
+    if (interaction.customId === 'apply') {
+        interaction.reply({ content: 'Your submission was received successfully!', ephemeral: true });
+    }
+    const applyabout = interaction.fields.getTextInputValue('aboutInput');
+    const applyskills = interaction.fields.getTextInputValue('skillsInput');
+    const applyexperience = interaction.fields.getTextInputValue('experienceInput');
+    const applystandout = interaction.fields.getTextInputValue('standoutInput');
+    const applyanythingelse = interaction.fields.getTextInputValue('anythingelseInput');
+    const applychannel = 
+});

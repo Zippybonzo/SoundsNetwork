@@ -9,7 +9,7 @@ function getPrismaClient() {
     return prisma;
 }
 
-export { getPrismaClient };
+module.exports = { getPrismaClient };
 
 // Close the Prisma Client connection when your application exits.
 process.on("beforeExit", () => {
