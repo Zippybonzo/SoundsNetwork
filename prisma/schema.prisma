@@ -50,7 +50,7 @@ model demotion {
 
 // applications
 model application {
-  id              Int    @id @default(autoincrement())
+  id              Int     @id @default(autoincrement())
   userId          String
   messageId       String
   applyabout      String
@@ -58,5 +58,5 @@ model application {
   applyexperience String
   applystandout   String
   applyelse       String
-  status          String
+  status          String?
 }
